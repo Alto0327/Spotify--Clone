@@ -3,19 +3,13 @@ import Playlist from "./components/Playlist"
 import Player from "./components/Player"
 import './styles/App.css'
 import Home from './pages/Home'
+import Login from "./components/Login"
+import Footer from "./components/Footer"
 
+const code = new URLSearchParams(window.location.search).get('code')
 function App() {
-
-
-  return (
-    <>
-      <Header/>
-      <Playlist/>
-        <Home/> 
-        {/* HOME PROFILE AND SEARCH WOULD BE INTERCHANGEABLE */}
-      <Player/>
-   </>
-  )
+  return code ? <Home code={code}/> : <Login/>
+  
 }
 
 export default App
