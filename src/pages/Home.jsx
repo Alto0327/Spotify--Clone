@@ -4,6 +4,7 @@ import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
 import Genres from "../components/Genres";
+import UserPlaylists from "../components/UserPlaylists";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "fbae3b0191774f28a48d431355216faf",
@@ -16,6 +17,7 @@ function Home({ code }) {
   const [playingTrack, setPlayingTrack] = useState();
   const [userData, setUserData] = useState(null);
   const [genres, setGenres] = useState([]);
+  const [Playlists, setPlaylists] = useState([]);
   
     function chooseTrack(track) {
       setPlayingTrack(track);
@@ -58,7 +60,7 @@ function Home({ code }) {
       cancel = true;
     };
   }, [search, accessToken]);
-
+//TODO: genres
   useEffect(() => {
     if(!accessToken)return
     spotifyApi.getCategories().then((res) => {
@@ -82,8 +84,20 @@ function Home({ code }) {
     });
   }, [accessToken]);
 
-
-
+// TODO: Playlists
+  useEffect(() => {
+    if (!accessToken) return;
+    spotifyApi.getUserPlaylists().then((res) => {
+      setPlaylists(res.body.items.map((playlist) => {
+        return{
+          name: playlist.name,
+          uri: playlist.uri,
+          icon: playlist.images[0].url
+        }
+        }));
+      console.log(res.body);
+    });
+  }, [accessToken]);
 
   return (
     <>
@@ -108,6 +122,8 @@ function Home({ code }) {
 
 
             <div>
+
+      {/* TODO: Genres */}
       <div>
         {genres.map(genre => (
           <div key={genre.name}>
@@ -125,6 +141,15 @@ function Home({ code }) {
       ) : (
         <p>Loading user data...</p>
       )}
+    </div>
+
+    {/* TODO: Playlists */}
+    <div>
+      {Playlists.map(playlist => (
+        <div key={playlist.name}>
+          <UserPlaylists name={playlist.name} icon={playlist.icon} />
+        </div>
+      ))}
     </div>
     </>
   );
