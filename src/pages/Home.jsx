@@ -3,6 +3,7 @@ import useAuth from "../hooks/useAuth";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
+import Genres from "../components/Genres";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "fbae3b0191774f28a48d431355216faf",
@@ -14,6 +15,7 @@ function Home({ code }) {
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
   const [userData, setUserData] = useState(null);
+  const [genres, setGenres] = useState([]);
   
     function chooseTrack(track) {
       setPlayingTrack(track);
@@ -57,6 +59,20 @@ function Home({ code }) {
     };
   }, [search, accessToken]);
 
+  useEffect(() => {
+    if(!accessToken)return
+    spotifyApi.getCategories().then((res) => {
+      setGenres(res.body.categories.items.map((category) => {
+        return {
+          name: category.name,
+          icon: category.icons[0].url,
+      }
+      }));
+      console.log(res.body);
+    })
+  },[accessToken])
+
+
 // FIXME: user data
   useEffect(() => {
     if (!accessToken) return;
@@ -65,6 +81,9 @@ function Home({ code }) {
       console.log(res.body);
     });
   }, [accessToken]);
+
+
+
 
   return (
     <>
@@ -89,7 +108,13 @@ function Home({ code }) {
 
 
             <div>
-
+      <div>
+        {genres.map(genre => (
+          <div key={genre.name}>
+            <Genres name={genre.name}  icon={genre.icon} />
+          </div>
+        ))}
+      </div>
       {/* FIXME: User data */}
       <h1>Spotify User Profile</h1>
       {userData ? (
