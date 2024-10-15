@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import useAuth from "../components/useAuth";
+import useAuth from "../hooks/useAuth";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
@@ -13,6 +13,7 @@ function Home({ code }) {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
+  const [userData, setUserData] = useState(null);
   
     function chooseTrack(track) {
       setPlayingTrack(track);
@@ -24,6 +25,7 @@ function Home({ code }) {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
+  
 
   useEffect(() => {
     if (!search) return setSearchResults([]);
@@ -55,9 +57,18 @@ function Home({ code }) {
     };
   }, [search, accessToken]);
 
+// FIXME: user data
+  useEffect(() => {
+    if (!accessToken) return;
+    spotifyApi.getMe().then((res) => {
+      setUserData(res.body);
+      console.log(res.body);
+    });
+  }, [accessToken]);
+
   return (
     <>
-      <form>
+      <form onSubmit={(e) => e.preventDefault()}>
         <label>
           Search songs
           <input
@@ -75,6 +86,21 @@ function Home({ code }) {
             <div>
             <Player accessToken={accessToken} trackUri = {playingTrack?.uri}/>
             </div>
+
+
+            <div>
+
+      {/* FIXME: User data */}
+      <h1>Spotify User Profile</h1>
+      {userData ? (
+        <div>
+          <img src={userData.images[0]?.url} alt="User Profile" width="100" />
+          <p>{userData.country}</p>
+        </div>
+      ) : (
+        <p>Loading user data...</p>
+      )}
+    </div>
     </>
   );
 }
