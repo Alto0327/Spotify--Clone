@@ -1,5 +1,6 @@
 .library-container{
-    height: calc(100vh - 12rem);
+    height: calc(100vh - 10rem);
     width: 20%;
     border: 10px solid blue;
+    overflow-y: auto;
 }

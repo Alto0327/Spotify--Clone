@@ -9,7 +9,9 @@
 }
 .main-content{
     width: 80%;
-    height: calc(100vh - 12rem);
+    height: calc(100vh - 10rem);
     border: 10px solid green;
+    overflow-y: auto;
+    display: flex;
 }
 
