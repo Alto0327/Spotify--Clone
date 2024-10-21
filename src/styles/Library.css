@@ -1,0 +1,5 @@
+.library-container{
+    height: calc(100vh - 12rem);
+    width: 20%;
+    border: 10px solid blue;
+}

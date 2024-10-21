@@ -4,10 +4,9 @@ import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
 import Genres from "../components/Genres";
-import UserPlaylists from "../components/UserPlaylists";
 import Library from "../page-components/Library";
 import Header from "../page-components/Header";
-
+import "../styles/Home.css";
 const spotifyApi = new SpotifyWebApi({
   clientId: "fbae3b0191774f28a48d431355216faf",
 });
@@ -105,47 +104,38 @@ function Home({ code }) {
   }, [accessToken]);
 
   return (
-    <>
-      <form onSubmit={(e) => e.preventDefault()}>
-        <label>
-          Search songs
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </label>
-      </form>
-      <div>
-        {searchResults.map((track) => (
-          <TrackSearchResult
-            track={track}
-            key={track.uri}
-            chooseTrack={chooseTrack}
-          />
-        ))}
-      </div>
-      <div>
-        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
-      </div>
+    <div className="home-container">
+      <Header userData={userData} search={search} setSearch={setSearch} />
+      <div className="content">
+      <Library Playlists={Playlists} />
+        <div className="main-content">
+          <div>
+            {searchResults.map((track) => (
+              <TrackSearchResult
+                track={track}
+                key={track.uri}
+                chooseTrack={chooseTrack}
+              />
+            ))}
+          </div>
 
-      <div>
-        <div>
-          {genres.map((genre) => (
-            <div key={genre.name}>
-              <Genres name={genre.name} icon={genre.icon} />
+          <div>
+            <div>
+              {genres.map((genre) => (
+                <div key={genre.name}>
+                  <Genres name={genre.name} icon={genre.icon} />
+                </div>
+              ))}
             </div>
-          ))}
+          </div>
+
+          {/* TODO: Organize Global & component specific State  */}
+          <div>
+          </div>
         </div>
-
       </div>
-
-
-      {/* TODO: Organize Global & component specific State  */}
-      <Header userData={userData} />
-      <Library Playlists={Playlists}/>
-
-    </>
+            <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+    </div>
   );
 }
 

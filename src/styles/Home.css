@@ -1,0 +1,15 @@
+.home-container{
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+.content{
+    display: flex;
+    flex-grow: 1;
+}
+.main-content{
+    width: 80%;
+    height: calc(100vh - 12rem);
+    border: 10px solid green;
+}
+

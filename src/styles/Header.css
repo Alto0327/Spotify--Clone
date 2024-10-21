@@ -1,0 +1,6 @@
+.header-container{
+    width: 100vw;
+    height: 5rem;
+    display: flex;
+    border: 10px solid red;
+}
