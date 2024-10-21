@@ -5,6 +5,8 @@ import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
 import Genres from "../components/Genres";
 import UserPlaylists from "../components/UserPlaylists";
+import Library from "../page-components/Library";
+import Header from "../page-components/Header";
 
 const spotifyApi = new SpotifyWebApi({
   clientId: "fbae3b0191774f28a48d431355216faf",
@@ -18,64 +20,65 @@ function Home({ code }) {
   const [userData, setUserData] = useState(null);
   const [genres, setGenres] = useState([]);
   const [Playlists, setPlaylists] = useState([]);
-  
-    function chooseTrack(track) {
-      setPlayingTrack(track);
-      setSearch(" ");
-    }
 
+  function chooseTrack(track) {
+    setPlayingTrack(track);
+    setSearch(" ");
+  }
 
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
-  
 
   useEffect(() => {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
-    let cancel = false
+    let cancel = false;
 
     spotifyApi.searchTracks(search).then((res) => {
-        if (cancel) return
-      console.log(res.body)
-      setSearchResults (res.body.tracks.items.map((track) => {
-        const smallestAlbumImage = track.album.images.reduce(
-          (smallest, image) => {
-            if (image.height < smallest.height) return image;
-            return smallest;
-          },
-          track.album.images[0]
-        );
-        return {
-          artist: track.artists[0].name,
-          title: track.name,
-          uri: track.uri,
-          albumUrl: smallestAlbumImage.url,
-        };
-      }))
-    })
+      if (cancel) return;
+      console.log(res.body);
+      setSearchResults(
+        res.body.tracks.items.map((track) => {
+          const smallestAlbumImage = track.album.images.reduce(
+            (smallest, image) => {
+              if (image.height < smallest.height) return image;
+              return smallest;
+            },
+            track.album.images[0]
+          );
+          return {
+            artist: track.artists[0].name,
+            title: track.name,
+            uri: track.uri,
+            albumUrl: smallestAlbumImage.url,
+          };
+        })
+      );
+    });
 
     return () => {
       cancel = true;
     };
   }, [search, accessToken]);
-//TODO: genres
+  //TODO: genres
   useEffect(() => {
-    if(!accessToken)return
+    if (!accessToken) return;
     spotifyApi.getCategories().then((res) => {
-      setGenres(res.body.categories.items.map((category) => {
-        return {
-          name: category.name,
-          icon: category.icons[0].url,
-      }
-      }));
+      setGenres(
+        res.body.categories.items.map((category) => {
+          return {
+            name: category.name,
+            icon: category.icons[0].url,
+          };
+        })
+      );
       console.log(res.body);
-    })
-  },[accessToken])
+    });
+  }, [accessToken]);
 
-
-// FIXME: user data
+  // FIXME: user data
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.getMe().then((res) => {
@@ -84,17 +87,19 @@ function Home({ code }) {
     });
   }, [accessToken]);
 
-// TODO: Playlists
+  // TODO: Playlists
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.getUserPlaylists().then((res) => {
-      setPlaylists(res.body.items.map((playlist) => {
-        return{
-          name: playlist.name,
-          uri: playlist.uri,
-          icon: playlist.images[0].url
-        }
-        }));
+      setPlaylists(
+        res.body.items.map((playlist) => {
+          return {
+            name: playlist.name,
+            uri: playlist.uri,
+            icon: playlist.images[0].url,
+          };
+        })
+      );
       console.log(res.body);
     });
   }, [accessToken]);
@@ -111,46 +116,35 @@ function Home({ code }) {
           />
         </label>
       </form>
-        <div>
-            {searchResults.map(track => (
-                <TrackSearchResult track={track} key={track.uri} chooseTrack={chooseTrack}/>
-            ))}
-        </div>
-            <div>
-            <Player accessToken={accessToken} trackUri = {playingTrack?.uri}/>
-            </div>
-
-
-            <div>
-
-      {/* TODO: Genres */}
       <div>
-        {genres.map(genre => (
-          <div key={genre.name}>
-            <Genres name={genre.name}  icon={genre.icon} />
-          </div>
+        {searchResults.map((track) => (
+          <TrackSearchResult
+            track={track}
+            key={track.uri}
+            chooseTrack={chooseTrack}
+          />
         ))}
       </div>
-      {/* FIXME: User data */}
-      <h1>Spotify User Profile</h1>
-      {userData ? (
-        <div>
-          <img src={userData.images[0]?.url} alt="User Profile" width="100" />
-          <p>{userData.country}</p>
-        </div>
-      ) : (
-        <p>Loading user data...</p>
-      )}
-    </div>
+      <div>
+        <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+      </div>
 
-    {/* TODO: Playlists */}
-    <div>
-      {Playlists.map(playlist => (
-        <div key={playlist.name}>
-          <UserPlaylists name={playlist.name} icon={playlist.icon} />
+      <div>
+        <div>
+          {genres.map((genre) => (
+            <div key={genre.name}>
+              <Genres name={genre.name} icon={genre.icon} />
+            </div>
+          ))}
         </div>
-      ))}
-    </div>
+
+      </div>
+
+
+      {/* TODO: Organize Global & component specific State  */}
+      <Header userData={userData} />
+      <Library Playlists={Playlists}/>
+
     </>
   );
 }
