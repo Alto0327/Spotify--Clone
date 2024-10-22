@@ -22,7 +22,7 @@ function Header({userData, search, setSearch}) {
 
           {userData ?(
             <div>
-              <img src={userData.images[0].url} alt="tada" width="100" />
+              <img src={userData.images[0].url} alt="Profile Picture" width="100" />
               <p>Welcome, {userData.display_name} !</p>
               </div>
           ) : (

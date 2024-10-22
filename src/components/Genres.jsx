@@ -5,7 +5,7 @@ function Genres({ icon, name }) {
         <h3>{name}</h3>
       </div>
       <div className="genres-icon">
-        <img src={icon} alt="tada" width="150" />
+        <img src={icon} alt="Genre" width="150" />
       </div>
     </div>
   );
