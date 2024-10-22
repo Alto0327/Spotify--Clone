@@ -109,6 +109,8 @@ function Home({ code }) {
       <div className="content">
       <Library Playlists={Playlists} />
         <div className="main-content">
+          
+          {searchResults.length > 0 ? (
           <div>
             {searchResults.map((track) => (
               <TrackSearchResult
@@ -118,9 +120,10 @@ function Home({ code }) {
               />
             ))}
           </div>
-
+          ):(
           <div>
-            <div>
+            <h1 className="genres-title">Browse Genres</h1>
+            <div className="genres-container">
               {genres.map((genre) => (
                 <div key={genre.name}>
                   <Genres name={genre.name} icon={genre.icon} />
@@ -128,10 +131,9 @@ function Home({ code }) {
               ))}
             </div>
           </div>
-
+          )}
           {/* TODO: Organize Global & component specific State  */}
-          <div>
-          </div>
+
         </div>
       </div>
             <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
