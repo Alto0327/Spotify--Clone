@@ -64,7 +64,7 @@ function Home({ code }) {
   //TODO: genres
   useEffect(() => {
     if (!accessToken) return;
-    spotifyApi.getCategories().then((res) => {
+    spotifyApi.getCategories({ limit: 42 }).then((res) => {
       setGenres(
         res.body.categories.items.map((category) => {
           return {
