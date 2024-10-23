@@ -10,9 +10,11 @@
 .main-content {
   width: 80%;
   height: calc(100vh - 10rem);
-  border: 10px solid green;
+  border: 3px solid black;
+  border-radius: 2rem;
   overflow-y: auto;
   display: flex;
+  background-image: linear-gradient(#20125d, #20125d,#171232,#12121a,#121212,#121212 );  color: white;
 }
 
 .genres-title{
@@ -43,4 +45,28 @@
 .genres-icon {
   transform: translateY(20%) rotate(25deg);
   filter: drop-shadow(-10px 14px 4px rgba(0, 0, 0, 0.5));
+}
+
+.search-results-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.SearchResult{
+  padding: 1rem;
+  margin: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  width: 340px;
+  height: 200px;
+  border: 2px solid red;
+  border-radius: 6%;
+  overflow: hidden;
+}
+
+.artist{
+  color: lightgray;
 }

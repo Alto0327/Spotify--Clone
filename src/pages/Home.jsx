@@ -111,7 +111,7 @@ function Home({ code }) {
         <div className="main-content">
           
           {searchResults.length > 0 ? (
-          <div>
+          <div className="search-results-container">
             {searchResults.map((track) => (
               <TrackSearchResult
                 track={track}

@@ -8,11 +8,14 @@ function TrackSearchResult({ track , chooseTrack }) {
       <div
       style={{ cursor: "pointer" }}
       onClick={handlePlay}
+      className="SearchResult"
     >
       <img src={track.albumUrl} style={{ height: "64px", width: "64px" }} />
-      <div className="ml-3">
-        <div>{track.title}</div>
-        <div className="text-muted">{track.artist}</div>
+      <div>
+        <div>
+          <h4>{track.title}</h4>
+        </div>
+        <div className="artist">{track.artist}</div>
       </div>
     </div>
 

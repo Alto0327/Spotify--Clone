@@ -14,7 +14,11 @@ body {
   place-items: center;
   text-align: center;
   min-height: 100vh;
-  background-color: #242424;
-  color: white;
+  background-color: black;
   font-family: 'Montserrat', sans-serif;
 }
+
+a{
+  text-decoration: none;
+}
+
