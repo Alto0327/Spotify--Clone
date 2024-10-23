@@ -1,0 +1,22 @@
+.login{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    background-image: linear-gradient(#20125d, #20125d,#171232,#12121a,#121212,#121212 );  color: white;
+    height: 100vh;
+    width: 100vw;
+    align-items: center;
+    justify-content: center;
+}
+
+.btn{
+    background-color: rgb(29, 192, 87);
+    color: black;
+    border: none;
+    padding: 1rem;
+    border-radius: 1rem;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: large;
+    width: 10rem;
+}
