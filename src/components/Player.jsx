@@ -16,6 +16,16 @@ export default function Player({ accessToken, trackUri }) {
       }}
       play={play}
       uris={trackUri ? [trackUri] : []}
+      styles={{
+        activeColor: "#1db954",
+        bgColor: "#000",
+        color: "#fff",
+        sliderColor: "#fff",
+        sliderHandleColor: "#fff",
+        sliderTrackColor:"#4d4d4d",
+        trackArtistColor: "#a1a1a1",
+        trackNameColor: "#fff",
+      }}
     />
   )
 }
