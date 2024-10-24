@@ -22,3 +22,16 @@ a{
   text-decoration: none;
 }
 
+::-webkit-scrollbar {
+  width: 8px;
+  
+}
+
+/* Track */
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgb(136, 136, 136, 0.4); 
+  opacity: 0;
+}
+

@@ -6,6 +6,7 @@ import Player from "../components/Player";
 import Genres from "../components/Genres";
 import Library from "../page-components/Library";
 import Header from "../page-components/Header";
+
 import "../styles/Home.css";
 const spotifyApi = new SpotifyWebApi({
   clientId: "fbae3b0191774f28a48d431355216faf",

@@ -2,6 +2,42 @@
     width: 100vw;
     height: 5rem;
     display: flex;
-    /* border: 10px solid red; */
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    padding-top: 1.5rem;
     background-color: black;
+}
+
+.profile-picture{
+    height: 3.5rem;
+    width: 3.5rem;
+    border-radius: 50%;
+}
+
+.profile-container{
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: #b7b2af;
+    padding-right: ;
+}
+
+.search-bar{
+    height: 2.5rem;
+    width: 20rem;
+    background-image: url('../assets/magnifying-glass-solid.svg');
+    background-repeat: no-repeat;
+    background-size: 20px;
+    background-position: 10px center;
+    border-radius: 5rem;
+    border: none;
+    padding: 0.5rem;
+    padding-left: 40px;
+    background-color: #1f1f1f;
+    color: #b7b2af;
+}
+
+.search-bar:focus{
+    outline: none;
 }

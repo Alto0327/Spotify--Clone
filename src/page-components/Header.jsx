@@ -4,13 +4,14 @@ function Header({userData, search, setSearch}) {
 
   return( 
       <div className="header-container">
-      <img src={SpotifyLogo} alt="Logo" width="100"/>
+      <img src={SpotifyLogo} alt="Logo" width="50"/>
 
       <form onSubmit={(e) => e.preventDefault()}>
         <label>
-          Search songs
           <input
+            className="search-bar"
             type="text"
+            placeholder="What do you want to play?"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -21,9 +22,9 @@ function Header({userData, search, setSearch}) {
 
 
           {userData ?(
-            <div>
-              <img src={userData.images[0].url} alt="Profile Picture" width="100" />
+            <div className="profile-container">
               <p>Welcome, {userData.display_name} !</p>
+              <img src={userData.images[0].url} alt="Profile Picture" width="50" className="profile-picture" />
               </div>
           ) : (
             <p>Loading UserData...</p>
