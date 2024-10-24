@@ -97,6 +97,7 @@ function Home({ code }) {
             name: playlist.name,
             uri: playlist.uri,
             icon: playlist.images[0].url,
+            owner: playlist.owner.display_name,
           };
         })
       );

@@ -6,22 +6,45 @@
     border-radius: 2rem;
     overflow-y: auto;
     padding: 1rem;
+    gap: 3rem;
     background-color: #121212;
 }
 
+.user-playlists-container:nth-last-child(1){
+    margin-bottom: 1px;
+}
 .user-playlists-container{
     display: flex;
     justify-content: flex-start;
     align-items: center;
+    margin-bottom: 1rem;
     text-align: start;
-    padding: 1rem;
     color: white;
 }
 
+
 .user-playlists-name{
-    padding: 1rem;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
 }
 
 .user-playlists-icon{
     border-radius: 10%;
+}
+
+.user-playlists-Text-container{
+    display: flex;
+    flex-direction: column;
+    text-align: start;
+    padding: 1rem;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap; 
+    text-overflow: ellipsis;
+    
+}
+
+.user-playlists-Text-container :nth-child(2){
+    color:#9c9c9c ;
 }
