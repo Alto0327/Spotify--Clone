@@ -20,7 +20,12 @@ function Home({ code }) {
   const [userData, setUserData] = useState(null);
   const [genres, setGenres] = useState([]);
   const [Playlists, setPlaylists] = useState([]);
+  const [selectedGenre, setSelectedGenre] = useState(null);
 
+  function handleGenereClick(genre) {
+    setSelectedGenre(genre);
+    setSearch("");
+  }
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch(" ");
@@ -109,36 +114,38 @@ function Home({ code }) {
     <div className="home-container">
       <Header userData={userData} search={search} setSearch={setSearch} />
       <div className="content">
-      <Library Playlists={Playlists} />
+        <Library Playlists={Playlists} />
         <div className="main-content">
-          
-          {searchResults.length > 0 ? (
-          <div className="search-results-container">
-            {searchResults.map((track) => (
-              <TrackSearchResult
-                track={track}
-                key={track.uri}
-                chooseTrack={chooseTrack}
-              />
-            ))}
-          </div>
-          ):(
-          <div>
-            <h1 className="genres-title">Browse Genres</h1>
-            <div className="genres-container">
-              {genres.map((genre) => (
-                <div key={genre.name}>
-                  <Genres name={genre.name} icon={genre.icon} />
-                </div>
+          {selectedGenre ? (
+            <div>
+              <h2>{selectedGenre.name}</h2>
+              <p>{selectedGenre.href}</p>
+            </div>
+          ) : searchResults.length > 0 ? (
+            <div className="search-results-container">
+              {searchResults.map((track) => (
+                <TrackSearchResult
+                  track={track}
+                  key={track.uri}
+                  chooseTrack={chooseTrack}
+                />
               ))}
             </div>
-          </div>
+          ) : (
+            <div>
+              <h1 className="genres-title">Browse Genres</h1>
+              <div className="genres-container">
+                {genres.map((genre) => (
+                  <div key={genre.name} onClick={() => handleGenereClick(genre)}>
+                    <Genres name={genre.name} icon={genre.icon} />
+                  </div>
+                ))}
+              </div>
+            </div>
           )}
-          {/* TODO: Organize Global & component specific State  */}
-
         </div>
       </div>
-            <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
+      <Player accessToken={accessToken} trackUri={playingTrack?.uri} />
     </div>
   );
 }
