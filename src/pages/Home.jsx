@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
-import Genres from "../components/Genres";
+// FIXME: import Genres from "../components/Genres";
 import Library from "../page-components/Library";
 import Header from "../page-components/Header";
 
@@ -18,24 +18,22 @@ function Home({ code }) {
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
   const [userData, setUserData] = useState(null);
-  const [genres, setGenres] = useState([]);
+  const [categories, setCategories] = useState([])
   const [Playlists, setPlaylists] = useState([]);
-  const [selectedGenre, setSelectedGenre] = useState(null);
 
-  function handleGenereClick(genre) {
-    setSelectedGenre(genre);
-    setSearch("");
-  }
+
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch(" ");
   }
 
+  //AccessToken
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
+  //Search
   useEffect(() => {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
@@ -67,32 +65,36 @@ function Home({ code }) {
       cancel = true;
     };
   }, [search, accessToken]);
-  //TODO: genres
-  useEffect(() => {
-    if (!accessToken) return;
-    spotifyApi.getCategories({ limit: 42 }).then((res) => {
-      setGenres(
-        res.body.categories.items.map((category) => {
-          return {
-            name: category.name,
-            icon: category.icons[0].url,
-          };
-        })
-      );
-      console.log(res.body);
-    });
-  }, [accessToken]);
 
-  // FIXME: user data
+  //Get Categories
+  useEffect(() => {
+    if(!accessToken) return;
+    spotifyApi.getCategories().then((res) => {
+      setCategories(
+        res.body.categories.items.map((category) => {
+          const categoryId = category.href.split("/").pop()
+          return{
+            name: category.name,
+            id: categoryId
+          }
+        })
+      )
+      console.log(res.body)
+      console.log("Categories")
+    })
+  }, [accessToken])
+
+  // UserData
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.getMe().then((res) => {
       setUserData(res.body);
       console.log(res.body);
+      console.log("user Data")
     });
   }, [accessToken]);
 
-  // TODO: Playlists
+  //User's Playlists
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.getUserPlaylists().then((res) => {
@@ -107,6 +109,7 @@ function Home({ code }) {
         })
       );
       console.log(res.body);
+      console.log("User's Made Playlist")
     });
   }, [accessToken]);
 
@@ -116,12 +119,7 @@ function Home({ code }) {
       <div className="content">
         <Library Playlists={Playlists} />
         <div className="main-content">
-          {selectedGenre ? (
-            <div>
-              <h2>{selectedGenre.name}</h2>
-              <p>{selectedGenre.href}</p>
-            </div>
-          ) : searchResults.length > 0 ? (
+          {searchResults.length > 0 ? (
             <div className="search-results-container">
               {searchResults.map((track) => (
                 <TrackSearchResult
@@ -133,14 +131,12 @@ function Home({ code }) {
             </div>
           ) : (
             <div>
-              <h1 className="genres-title">Browse Genres</h1>
-              <div className="genres-container">
-                {genres.map((genre) => (
-                  <div key={genre.name} onClick={() => handleGenereClick(genre)}>
-                    <Genres name={genre.name} icon={genre.icon} />
-                  </div>
-                ))}
-              </div>
+              {categories.map((category) => (
+                <div key={category.id}>
+                  <h2>{category.name}</h2>
+                  <p>{category.id}</p>
+                </div>
+              ))}
             </div>
           )}
         </div>
