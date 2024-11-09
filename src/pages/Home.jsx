@@ -3,7 +3,7 @@ import useAuth from "../hooks/useAuth";
 import SpotifyWebApi from "spotify-web-api-node";
 import TrackSearchResult from "../components/TrackSearchResult";
 import Player from "../components/Player";
-// FIXME: import Genres from "../components/Genres";
+import CategoryPlaylists from "../components/CategoryPlaylists"; // CategoryPlaylists component for displaying playlists by category
 import Library from "../page-components/Library";
 import Header from "../page-components/Header";
 
@@ -18,22 +18,22 @@ function Home({ code }) {
   const [searchResults, setSearchResults] = useState([]);
   const [playingTrack, setPlayingTrack] = useState();
   const [userData, setUserData] = useState(null);
-  const [categories, setCategories] = useState([])
-  const [Playlists, setPlaylists] = useState([]);
-
+  const [categories, setCategories] = useState([]);
+  const [categoryPlaylists, setCategoryPlaylist] = useState([]);
+  const [playlists, setPlaylists] = useState([]);
 
   function chooseTrack(track) {
     setPlayingTrack(track);
     setSearch(" ");
   }
 
-  //AccessToken
+  // AccessToken
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.setAccessToken(accessToken);
   }, [accessToken]);
 
-  //Search
+  // Search
   useEffect(() => {
     if (!search) return setSearchResults([]);
     if (!accessToken) return;
@@ -66,35 +66,52 @@ function Home({ code }) {
     };
   }, [search, accessToken]);
 
-  //Get Categories
+  // Get Categories and Category Playlists
   useEffect(() => {
-    if(!accessToken) return;
+    if (!accessToken) return;
+  
+    setCategoryPlaylist([]); // Clear before adding new data
+  
     spotifyApi.getCategories().then((res) => {
-      setCategories(
-        res.body.categories.items.map((category) => {
-          const categoryId = category.href.split("/").pop()
-          return{
-            name: category.name,
-            id: categoryId
-          }
+      const categories = res.body.categories.items;
+  
+      categories.forEach((category) => {
+        fetch(`http://localhost:3001/v1/browse/categories/${category.id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ accessToken }),
         })
-      )
-      console.log(res.body)
-      console.log("Categories")
-    })
-  }, [accessToken])
+          .then((response) => response.json())
+          .then((playlistRes) => {
+            setCategoryPlaylist((prevPlaylist) => [
+              ...prevPlaylist,
+              {
+                category: category.name,
+                playlist: playlistRes,
+              },
+            ]);
+          })
+          .catch((err) => {
+            console.error("Error fetching category playlists:", err);
+          });
+      });
+    });
+  }, [accessToken]);
+  
 
-  // UserData
+  // User Data
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.getMe().then((res) => {
       setUserData(res.body);
       console.log(res.body);
-      console.log("user Data")
+      console.log("User Data");
     });
   }, [accessToken]);
 
-  //User's Playlists
+  // User's Playlists
   useEffect(() => {
     if (!accessToken) return;
     spotifyApi.getUserPlaylists().then((res) => {
@@ -109,7 +126,7 @@ function Home({ code }) {
         })
       );
       console.log(res.body);
-      console.log("User's Made Playlist")
+      console.log("User's Made Playlist");
     });
   }, [accessToken]);
 
@@ -117,7 +134,7 @@ function Home({ code }) {
     <div className="home-container">
       <Header userData={userData} search={search} setSearch={setSearch} />
       <div className="content">
-        <Library Playlists={Playlists} />
+        <Library Playlists={playlists} />
         <div className="main-content">
           {searchResults.length > 0 ? (
             <div className="search-results-container">
@@ -130,13 +147,18 @@ function Home({ code }) {
               ))}
             </div>
           ) : (
-            <div>
-              {categories.map((category) => (
-                <div key={category.id}>
-                  <h2>{category.name}</h2>
-                  <p>{category.id}</p>
-                </div>
-              ))}
+            <div className="category-playlists-container">
+              {categoryPlaylists.length > 0 ? (
+                categoryPlaylists.map((category) => (
+                  <CategoryPlaylists
+                    key={category.category}
+                    category={category}
+                    playlists={category.playlists} // Passing playlists to CategoryPlaylists component
+                  />
+                ))
+              ) : (
+                <p>No categories available</p>
+              )}
             </div>
           )}
         </div>
