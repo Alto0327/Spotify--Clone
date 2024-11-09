@@ -5,7 +5,6 @@ function UserPlaylists ({icon, name}) {
            <img src={icon} alt="tada" width="60px" className="user-playlists-icon"/>
         </div>
     )
-    
     }
     
     export default UserPlaylists
