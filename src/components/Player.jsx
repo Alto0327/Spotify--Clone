@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import SpotifyPlayer from "react-spotify-web-playback"
-
+// TODO: Add loop and shuffle
 export default function Player({ accessToken, trackUri }) {
   const [play, setPlay] = useState(false)
 
