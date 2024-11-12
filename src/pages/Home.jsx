@@ -114,19 +114,35 @@ function Home({ code }) {
   // User's Playlists
   useEffect(() => {
     if (!accessToken) return;
+
     spotifyApi.getUserPlaylists().then((res) => {
-      setPlaylists(
-        res.body.items.map((playlist) => {
-          return {
-            name: playlist.name,
-            uri: playlist.uri,
-            icon: playlist.images[0].url,
-            owner: playlist.owner.display_name,
-          };
+      const playlists = res.body.items;
+      console.log("Fetched playlists from Spotify:", playlists); // Log the list of playlists
+
+      playlists.forEach((playlist) => {
+        fetch(`http://localhost:3001/v1/me/playlists/${playlist.id}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ accessToken }),
         })
-      );
-      console.log(res.body);
-      console.log("User's Made Playlist");
+          .then((response) => response.json())
+          .then((eachPlaylist) => {
+            console.log("Fetched each playlist details:", eachPlaylist); // Log each fetched playlist details
+            setPlaylists((prevPlaylists) => [
+              ...prevPlaylists,
+              {
+                name: playlist.name,
+                imageUrl: eachPlaylist.images[0].url,
+                playlist: eachPlaylist,
+              },
+            ]);
+          })
+          .catch((e) => {
+            console.error("Error fetching playlist:", e);
+          });
+      });
     });
   }, [accessToken]);
 
